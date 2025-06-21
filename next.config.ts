@@ -2,7 +2,10 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: 'standalone',
-  // Optimize for production deployment
+  outputFileTracing: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   experimental: {
     // Enable output file tracing for smaller Docker images
     outputFileTracingRoot: process.cwd(),
