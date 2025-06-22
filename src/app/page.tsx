@@ -6,52 +6,28 @@ import { Product } from '@/types'
 import ProductCard from '@/components/ProductCard'
 import { ArrowRight, Star, Heart, Truck } from 'lucide-react'
 
-// Mock data for development - will be replaced with Supabase data
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Coastal Driftwood Sculpture',
-    description: 'Hand-carved driftwood sculpture inspired by coastal beauty.',
-    price: 89.99,
-    image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
-    category: 'Sculptures',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Handwoven Sea Glass Bracelet',
-    description: 'Delicate bracelet featuring authentic sea glass collected from coastal beaches.',
-    price: 34.99,
-    image_url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop',
-    category: 'Jewelry',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'Rustic Crab Shell Candle',
-    description: 'Natural soy candle housed in a real crab shell with ocean breeze scent.',
-    price: 24.99,
-    image_url: 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a?w=500&h=500&fit=crop',
-    category: 'Candles',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-]
-
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // In production, this would fetch from Supabase
-    setFeaturedProducts(mockProducts.filter(p => p.featured))
+    const fetchFeaturedProducts = async () => {
+      try {
+        const response = await fetch('/api/products?featured=true')
+        if (response.ok) {
+          const products = await response.json()
+          setFeaturedProducts(products)
+        } else {
+          console.error('Failed to fetch featured products')
+        }
+      } catch (error) {
+        console.error('Error fetching featured products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchFeaturedProducts()
   }, [])
 
   return (
@@ -134,22 +110,28 @@ export default function HomePage() {
             </p>
           </div>
           
-          {featuredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-slate-600 mb-4">Loading featured products...</p>
             </div>
           ) : (
-            <div className="text-center py-12">
-              <p className="text-slate-600 mb-4">No featured products available at the moment.</p>
-              <Link
-                href="/shop"
-                className="text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Browse all products →
-              </Link>
-            </div>
+            featuredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                {featuredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-slate-600 mb-4">No featured products available at the moment.</p>
+                <Link
+                  href="/shop"
+                  className="text-blue-600 hover:text-blue-700 font-medium"
+                >
+                  Browse all products →
+                </Link>
+              </div>
+            )
           )}
           
           <div className="text-center">

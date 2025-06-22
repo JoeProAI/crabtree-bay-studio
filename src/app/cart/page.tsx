@@ -17,9 +17,34 @@ export default function CartPage() {
     }
   }
 
-  const handleCheckout = () => {
-    // In a real app, this would integrate with Stripe
-    alert('Checkout functionality would integrate with Stripe here!')
+  const handleCheckout = async () => {
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: cart.items }),
+      })
+
+      const { sessionId, error } = await response.json()
+
+      if (error) {
+        alert(`Checkout failed: ${error}`)
+        return
+      }
+
+      // Redirect to Stripe Checkout
+      const { loadStripe } = await import('@stripe/stripe-js')
+      const stripeInstance = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+      
+      if (stripeInstance) {
+        await stripeInstance.redirectToCheckout({ sessionId })
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      alert('Something went wrong during checkout. Please try again.')
+    }
   }
 
   if (cart.items.length === 0) {

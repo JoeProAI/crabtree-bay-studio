@@ -5,94 +5,41 @@ import { Product } from '@/types'
 import ProductCard from '@/components/ProductCard'
 import { Search, Filter } from 'lucide-react'
 
-// Extended mock data for the shop
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Coastal Driftwood Sculpture',
-    description: 'Hand-carved driftwood sculpture inspired by coastal beauty.',
-    price: 89.99,
-    image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
-    category: 'Sculptures',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Handwoven Sea Glass Bracelet',
-    description: 'Delicate bracelet featuring authentic sea glass collected from coastal beaches.',
-    price: 34.99,
-    image_url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop',
-    category: 'Jewelry',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'Rustic Crab Shell Candle',
-    description: 'Natural soy candle housed in a real crab shell with ocean breeze scent.',
-    price: 24.99,
-    image_url: 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a?w=500&h=500&fit=crop',
-    category: 'Candles',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '4',
-    name: 'Oyster Shell Wind Chime',
-    description: 'Melodic wind chime crafted from authentic coastal oyster shells.',
-    price: 45.99,
-    image_url: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500&h=500&fit=crop',
-    category: 'Home Decor',
-    status: 'active',
-    featured: false,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '5',
-    name: 'Seashell Memory Box',
-    description: 'Handcrafted wooden box adorned with collected seashells and beach glass.',
-    price: 67.99,
-    image_url: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=500&h=500&fit=crop',
-    category: 'Storage',
-    status: 'active',
-    featured: false,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '6',
-    name: 'Coastal Rope Basket',
-    description: 'Woven basket made from natural rope with nautical-inspired design.',
-    price: 52.99,
-    image_url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=500&h=500&fit=crop',
-    category: 'Storage',
-    status: 'active',
-    featured: false,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-]
-
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [sortBy, setSortBy] = useState('name')
-
-  const categories = ['All', ...Array.from(new Set(mockProducts.map(p => p.category)))]
+  const [loading, setLoading] = useState(true)
+  const [categories, setCategories] = useState(['All'])
 
   useEffect(() => {
-    // In production, this would fetch from Supabase
-    setProducts(mockProducts.filter(p => p.status === 'active'))
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('/api/products')
+        if (response.ok) {
+          const data = await response.json()
+          setProducts(data)
+          
+          // Extract unique categories
+          const products = data as Product[]
+          const productCategories = products
+            .map(p => p.category)
+            .filter((category): category is string => typeof category === 'string' && category.length > 0)
+          const uniqueCategories: string[] = ['All', ...Array.from(new Set(productCategories))]
+          setCategories(uniqueCategories)
+        } else {
+          console.error('Failed to fetch products')
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProducts()
   }, [])
 
   useEffect(() => {
@@ -188,7 +135,11 @@ export default function ShopPage() {
         </div>
 
         {/* Products Grid */}
-        {filteredProducts.length > 0 ? (
+        {loading ? (
+          <div className="text-center py-12">
+            <p className="text-slate-600 mb-4">Loading products...</p>
+          </div>
+        ) : filteredProducts.length > 0 ? (
           <>
             <div className="mb-6">
               <p className="text-slate-600">

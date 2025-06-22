@@ -4,50 +4,11 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Edit, Trash2, Eye, EyeOff, Save, X } from 'lucide-react'
 import { Product } from '@/types'
 
-// Mock data - in production this would come from Supabase
-const initialProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Coastal Driftwood Sculpture',
-    description: 'Hand-carved driftwood sculpture inspired by coastal beauty.',
-    price: 89.99,
-    image_url: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
-    category: 'Sculptures',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Handwoven Sea Glass Bracelet',
-    description: 'Delicate bracelet featuring authentic sea glass collected from coastal beaches.',
-    price: 34.99,
-    image_url: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop',
-    category: 'Jewelry',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-  {
-    id: '3',
-    name: 'Rustic Crab Shell Candle',
-    description: 'Natural soy candle housed in a real crab shell with ocean breeze scent.',
-    price: 24.99,
-    image_url: 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a?w=500&h=500&fit=crop',
-    category: 'Candles',
-    status: 'active',
-    featured: true,
-    created_at: '2025-01-01T00:00:00Z',
-    updated_at: '2025-01-01T00:00:00Z',
-  },
-]
-
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
-  const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newProduct, setNewProduct] = useState({
@@ -66,6 +27,7 @@ export default function AdminPage() {
     if (password === 'crabtree2025') {
       setIsAuthenticated(true)
       localStorage.setItem('admin-auth', 'true')
+      fetchProducts() // Load products after login
     } else {
       alert('Incorrect password')
     }
@@ -75,74 +37,164 @@ export default function AdminPage() {
   useEffect(() => {
     if (localStorage.getItem('admin-auth') === 'true') {
       setIsAuthenticated(true)
+      fetchProducts() // Load products if already authenticated
     }
   }, [])
 
   const handleLogout = () => {
     setIsAuthenticated(false)
     localStorage.removeItem('admin-auth')
+    setProducts([]) // Clear products on logout
   }
 
-  const handleAddProduct = () => {
+  // Fetch products from API
+  const fetchProducts = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/admin/products')
+      if (response.ok) {
+        const data = await response.json()
+        setProducts(data)
+      } else {
+        console.error('Failed to fetch products')
+        alert('Failed to load products')
+      }
+    } catch (error) {
+      console.error('Error fetching products:', error)
+      alert('Error loading products')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleAddProduct = async () => {
     if (!newProduct.name || !newProduct.price) {
       alert('Please fill in required fields')
       return
     }
 
-    const product: Product = {
-      id: Date.now().toString(),
-      name: newProduct.name,
-      description: newProduct.description,
-      price: parseFloat(newProduct.price),
-      image_url: newProduct.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
-      category: newProduct.category,
-      status: newProduct.status,
-      featured: newProduct.featured,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+    setLoading(true)
+    try {
+      const productData = {
+        name: newProduct.name,
+        description: newProduct.description,
+        price: parseFloat(newProduct.price),
+        image_url: newProduct.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
+        category: newProduct.category,
+        status: newProduct.status,
+        featured: newProduct.featured,
+      }
+
+      const response = await fetch('/api/admin/products', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
+      })
+
+      if (response.ok) {
+        const newProductData = await response.json()
+        setProducts([newProductData, ...products])
+        setNewProduct({
+          name: '',
+          description: '',
+          price: '',
+          image_url: '',
+          category: '',
+          status: 'active',
+          featured: false
+        })
+        setShowAddForm(false)
+        alert('Product added successfully!')
+      } else {
+        const error = await response.json()
+        alert(`Failed to add product: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error adding product:', error)
+      alert('Error adding product')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleUpdateProduct = async (updatedProduct: Product) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/admin/products/${updatedProduct.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProduct),
+      })
+
+      if (response.ok) {
+        const updatedData = await response.json()
+        setProducts(products.map(p => p.id === updatedProduct.id ? updatedData : p))
+        setEditingProduct(null)
+        alert('Product updated successfully!')
+      } else {
+        const error = await response.json()
+        alert(`Failed to update product: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error updating product:', error)
+      alert('Error updating product')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDeleteProduct = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this product?')) {
+      return
     }
 
-    setProducts([...products, product])
-    setNewProduct({
-      name: '',
-      description: '',
-      price: '',
-      image_url: '',
-      category: '',
-      status: 'active',
-      featured: false
-    })
-    setShowAddForm(false)
-    alert('Product added successfully!')
-  }
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/admin/products/${id}`, {
+        method: 'DELETE',
+      })
 
-  const handleUpdateProduct = (updatedProduct: Product) => {
-    setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p))
-    setEditingProduct(null)
-    alert('Product updated successfully!')
-  }
-
-  const handleDeleteProduct = (id: string) => {
-    if (confirm('Are you sure you want to delete this product?')) {
-      setProducts(products.filter(p => p.id !== id))
-      alert('Product deleted successfully!')
+      if (response.ok) {
+        setProducts(products.filter(p => p.id !== id))
+        alert('Product deleted successfully!')
+      } else {
+        const error = await response.json()
+        alert(`Failed to delete product: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error)
+      alert('Error deleting product')
+    } finally {
+      setLoading(false)
     }
   }
 
-  const toggleProductStatus = (id: string) => {
-    setProducts(products.map(p => 
-      p.id === id 
-        ? { ...p, status: p.status === 'active' ? 'inactive' : 'active' as const }
-        : p
-    ))
+  const toggleProductStatus = async (id: string) => {
+    const product = products.find(p => p.id === id)
+    if (!product) return
+
+    const updatedProduct: Product = {
+      ...product,
+      status: product.status === 'active' ? 'inactive' : 'active'
+    }
+
+    await handleUpdateProduct(updatedProduct)
   }
 
-  const toggleFeatured = (id: string) => {
-    setProducts(products.map(p => 
-      p.id === id 
-        ? { ...p, featured: !p.featured }
-        : p
-    ))
+  const toggleFeatured = async (id: string) => {
+    const product = products.find(p => p.id === id)
+    if (!product) return
+
+    const updatedProduct = {
+      ...product,
+      featured: !product.featured
+    }
+
+    await handleUpdateProduct(updatedProduct)
   }
 
   // Login form
