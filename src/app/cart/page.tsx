@@ -19,6 +19,9 @@ export default function CartPage() {
 
   const handleCheckout = async () => {
     try {
+      console.log('Starting checkout process...')
+      console.log('Cart items:', cart.items)
+      
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -27,23 +30,63 @@ export default function CartPage() {
         body: JSON.stringify({ items: cart.items }),
       })
 
-      const { sessionId, error } = await response.json()
+      console.log('Checkout response status:', response.status)
+      
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('Checkout API error:', errorText)
+        alert(`Checkout failed: ${response.status} ${response.statusText}`)
+        return
+      }
+
+      const data = await response.json()
+      console.log('Checkout response data:', data)
+      
+      const { sessionId, error } = data
 
       if (error) {
+        console.error('Checkout session error:', error)
         alert(`Checkout failed: ${error}`)
         return
       }
 
+      if (!sessionId) {
+        console.error('No session ID received')
+        alert('Checkout failed: No session ID received')
+        return
+      }
+
+      console.log('Loading Stripe...')
       // Redirect to Stripe Checkout
       const { loadStripe } = await import('@stripe/stripe-js')
-      const stripeInstance = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+      const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+      
+      console.log('Stripe publishable key available:', !!publishableKey)
+      
+      if (!publishableKey) {
+        console.error('Stripe publishable key not found')
+        alert('Checkout configuration error: Stripe key not found')
+        return
+      }
+      
+      const stripeInstance = await loadStripe(publishableKey)
+      console.log('Stripe instance loaded:', !!stripeInstance)
       
       if (stripeInstance) {
-        await stripeInstance.redirectToCheckout({ sessionId })
+        console.log('Redirecting to Stripe checkout with session:', sessionId)
+        const result = await stripeInstance.redirectToCheckout({ sessionId })
+        
+        if (result.error) {
+          console.error('Stripe redirect error:', result.error)
+          alert(`Checkout failed: ${result.error.message}`)
+        }
+      } else {
+        console.error('Failed to load Stripe')
+        alert('Failed to load payment system. Please try again.')
       }
     } catch (error) {
       console.error('Checkout error:', error)
-      alert('Something went wrong during checkout. Please try again.')
+      alert('Something went wrong during checkout. Please check the console and try again.')
     }
   }
 
