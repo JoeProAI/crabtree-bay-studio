@@ -21,7 +21,7 @@ export default function ContactPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // In a real app, this would send the email
-    alert('Thank you for your message! We\'ll get back to you soon.')
+    alert('Thank you for your message! We&apos;ll get back to you soon.')
     setFormData({ name: '', email: '', subject: '', message: '' })
   }
 
@@ -32,8 +32,8 @@ export default function ContactPage() {
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-slate-900 mb-6">Get in Touch</h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            We'd love to hear from you! Whether you have questions about our products, 
-            custom orders, or just want to say hello, don't hesitate to reach out.
+            We&apos;d love to hear from you! Whether you have questions about our products, 
+            custom orders, or just want to say hello, don&apos;t hesitate to reach out.
           </p>
         </div>
 
@@ -93,12 +93,12 @@ export default function ContactPage() {
                 <div>
                   <h4 className="font-medium text-slate-900 mb-2">Do you offer custom orders?</h4>
                   <p className="text-slate-600 text-sm">
-                    Yes! We love creating custom pieces. Contact us with your ideas and we'll work 
+                    Yes! We love creating custom pieces. Contact us with your ideas and we&apos;ll work 
                     with you to bring your vision to life.
                   </p>
                 </div>
                 <div>
-                  <h4 className="font-medium text-slate-900 mb-2">What's your return policy?</h4>
+                  <h4 className="font-medium text-slate-900 mb-2">What&apos;s your return policy?</h4>
                   <p className="text-slate-600 text-sm">
                     We offer a 30-day return policy for unused items in original condition. 
                     Custom orders are final sale.
@@ -166,7 +166,7 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleChange}
                     className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="What's this about?"
+                    placeholder="What&apos;s this about?"
                   />
                 </div>
 

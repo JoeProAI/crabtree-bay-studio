@@ -30,7 +30,7 @@ export default function CartPage() {
             <ShoppingBag className="h-24 w-24 text-slate-300 mx-auto mb-6" />
             <h1 className="text-3xl font-bold text-slate-900 mb-4">Your Cart is Empty</h1>
             <p className="text-lg text-slate-600 mb-8">
-              Looks like you haven't added any coastal treasures to your cart yet.
+              Looks like you haven&apos;t added any coastal treasures to your cart yet.
             </p>
             <Link
               href="/shop"
