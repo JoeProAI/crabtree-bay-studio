@@ -65,4 +65,4 @@ jobs:
           --min-instances 0 \
           --max-instances 10 \
           --set-env-vars NODE_ENV=production \
-          --set-secrets SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest,STRIPE_SECRET_KEY=stripe-secret-key:latest,STRIPE_WEBHOOK_SECRET=stripe-webhook-secret:latest
+          --set-secrets SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest,STRIPE_SECRET_KEY=stripe-secret-key:latest
