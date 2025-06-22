@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ProductService, ProductInput } from '@/lib/supabase-admin'
 
+interface RouteParams {
+  params: { id: string }
+}
+
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
     const productData: Partial<ProductInput> = await request.json()
@@ -20,7 +24,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
     await ProductService.deleteProduct(params.id)

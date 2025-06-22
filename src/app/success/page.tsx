@@ -72,14 +72,14 @@ export default function SuccessPage() {
 
           {/* Next Steps */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-slate-900">What's Next?</h3>
+            <h3 className="text-lg font-semibold text-slate-900">What&apos;s Next?</h3>
             <div className="text-left space-y-3">
               <div className="flex items-start space-x-3">
                 <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                   <span className="text-sm font-semibold text-blue-600">1</span>
                 </div>
                 <p className="text-slate-600">
-                  We'll send you an email confirmation with your order details.
+                  We&apos;ll send you an email confirmation with your order details.
                 </p>
               </div>
               <div className="flex items-start space-x-3">
@@ -95,7 +95,7 @@ export default function SuccessPage() {
                   <span className="text-sm font-semibold text-blue-600">3</span>
                 </div>
                 <p className="text-slate-600">
-                  We'll notify you when your order ships with tracking information.
+                  We&apos;ll notify you when your order ships with tracking information.
                 </p>
               </div>
             </div>

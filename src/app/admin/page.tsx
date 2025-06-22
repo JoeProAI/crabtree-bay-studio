@@ -8,7 +8,6 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(false)
   const [editingProduct, setEditingProduct] = useState<Product | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
   const [newProduct, setNewProduct] = useState({
@@ -49,7 +48,6 @@ export default function AdminPage() {
 
   // Fetch products from API
   const fetchProducts = async () => {
-    setLoading(true)
     try {
       const response = await fetch('/api/admin/products')
       if (response.ok) {
@@ -62,8 +60,6 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error fetching products:', error)
       alert('Error loading products')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -73,7 +69,6 @@ export default function AdminPage() {
       return
     }
 
-    setLoading(true)
     try {
       const productData = {
         name: newProduct.name,
@@ -114,13 +109,10 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error adding product:', error)
       alert('Error adding product')
-    } finally {
-      setLoading(false)
     }
   }
 
   const handleUpdateProduct = async (updatedProduct: Product) => {
-    setLoading(true)
     try {
       const response = await fetch(`/api/admin/products/${updatedProduct.id}`, {
         method: 'PUT',
@@ -142,8 +134,6 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error updating product:', error)
       alert('Error updating product')
-    } finally {
-      setLoading(false)
     }
   }
 
@@ -152,7 +142,6 @@ export default function AdminPage() {
       return
     }
 
-    setLoading(true)
     try {
       const response = await fetch(`/api/admin/products/${id}`, {
         method: 'DELETE',
@@ -168,8 +157,6 @@ export default function AdminPage() {
     } catch (error) {
       console.error('Error deleting product:', error)
       alert('Error deleting product')
-    } finally {
-      setLoading(false)
     }
   }
 
