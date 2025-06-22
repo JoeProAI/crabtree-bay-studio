@@ -7,8 +7,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   experimental: {
-    // Enable output file tracing for smaller Docker images
-    outputFileTracingRoot: process.cwd(),
+    // Enable any experimental features if needed
   },
   // Disable source maps in production for smaller bundle size
   productionBrowserSourceMaps: false,
