@@ -22,11 +22,19 @@ export const createSupabaseServerClient = () => {
       get(name: string) {
         return cookieStore.get(name)?.value
       },
-      set(name: string, value: string, options: { [key: string]: string | number | undefined }) {
-        cookieStore.set({ name, value, ...options })
+      set(name: string, value: string, options?: Record<string, unknown>) {
+        try {
+          cookieStore.set(name, value, options)
+        } catch {
+          // Handle cookie setting errors in server environment
+        }
       },
-      remove(name: string, options: { [key: string]: string | number | undefined }) {
-        cookieStore.set({ name, value: '', ...options })
+      remove(name: string, options?: Record<string, unknown>) {
+        try {
+          cookieStore.set(name, '', { ...options, maxAge: 0 })
+        } catch {
+          // Handle cookie removal errors in server environment  
+        }
       },
     },
   })
