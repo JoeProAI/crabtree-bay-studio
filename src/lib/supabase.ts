@@ -14,8 +14,8 @@ export const createSupabaseBrowserClient = () => {
 }
 
 // Server client for server components and API routes
-export const createSupabaseServerClient = () => {
-  const cookieStore = cookies()
+export const createSupabaseServerClient = async () => {
+  const cookieStore = await cookies()
   
   return createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
