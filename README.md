@@ -37,3 +37,20 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 # Deployment trigger: Force rebuild 2025-06-22-15:35
 # Trigger deployment after repository creation
 # Fix secret permissions
+# Crabtree Bay Studio
+
+A modern e-commerce platform built with Next.js, Supabase, and Stripe.
+
+## Features
+
+- Product catalog with admin management
+- Shopping cart functionality
+- Stripe payment processing
+- Supabase backend integration
+- Responsive design with Tailwind CSS
+
+## Deployment
+
+This application is deployed on Google Cloud Run with CI/CD via GitHub Actions.
+
+<!-- Force deployment: 2025-06-22-19:27 -->
