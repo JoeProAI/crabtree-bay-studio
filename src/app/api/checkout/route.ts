@@ -2,12 +2,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { CartItem } from '@/types'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
-})
-
 export async function POST(request: NextRequest) {
   try {
+    // Initialize Stripe at runtime, not build time
+    const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+    if (!stripeSecretKey) {
+      console.error('STRIPE_SECRET_KEY not found')
+      return NextResponse.json({ error: 'Payment configuration error' }, { status: 500 })
+    }
+
+    const stripe = new Stripe(stripeSecretKey, {
+      apiVersion: '2025-05-28.basil',
+    })
+
     const { items }: { items: CartItem[] } = await request.json()
 
     if (!items || items.length === 0) {

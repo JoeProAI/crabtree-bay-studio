@@ -1,11 +1,17 @@
 import { createClient } from '@supabase/supabase-js'
 import { Product } from '@/types'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+// Function to get admin client - called at runtime, not build time
+function getSupabaseAdmin() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-// Admin client with service role key for full access
-export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error('Missing Supabase environment variables')
+  }
+
+  return createClient(supabaseUrl, supabaseServiceKey)
+}
 
 export interface ProductInput {
   name: string
@@ -20,6 +26,7 @@ export interface ProductInput {
 export class ProductService {
   // Get all products
   static async getAllProducts(): Promise<Product[]> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('products')
       .select('*')
@@ -35,6 +42,7 @@ export class ProductService {
 
   // Get active products only
   static async getActiveProducts(): Promise<Product[]> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('products')
       .select('*')
@@ -51,6 +59,7 @@ export class ProductService {
 
   // Get featured products
   static async getFeaturedProducts(): Promise<Product[]> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('products')
       .select('*')
@@ -68,6 +77,7 @@ export class ProductService {
 
   // Create a new product
   static async createProduct(productData: ProductInput): Promise<Product> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('products')
       .insert([productData])
@@ -84,6 +94,7 @@ export class ProductService {
 
   // Update a product
   static async updateProduct(id: string, productData: Partial<ProductInput>): Promise<Product> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { data, error } = await supabaseAdmin
       .from('products')
       .update({ ...productData, updated_at: new Date().toISOString() })
@@ -101,6 +112,7 @@ export class ProductService {
 
   // Delete a product
   static async deleteProduct(id: string): Promise<void> {
+    const supabaseAdmin = getSupabaseAdmin()
     const { error } = await supabaseAdmin
       .from('products')
       .delete()
@@ -115,6 +127,7 @@ export class ProductService {
   // Toggle product status
   static async toggleProductStatus(id: string): Promise<Product> {
     // First get the current status
+    const supabaseAdmin = getSupabaseAdmin()
     const { data: product, error: fetchError } = await supabaseAdmin
       .from('products')
       .select('status')
@@ -146,6 +159,7 @@ export class ProductService {
   // Toggle featured status
   static async toggleFeatured(id: string): Promise<Product> {
     // First get the current featured status
+    const supabaseAdmin = getSupabaseAdmin()
     const { data: product, error: fetchError } = await supabaseAdmin
       .from('products')
       .select('featured')
