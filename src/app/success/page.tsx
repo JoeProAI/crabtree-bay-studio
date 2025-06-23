@@ -1,12 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { CheckCircle, Package, ArrowRight } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 
-export default function SuccessPage() {
+// Separate component that uses useSearchParams
+function SuccessContent() {
   const searchParams = useSearchParams()
   const sessionId = searchParams.get('session_id')
   const { clearCart } = useCart()
@@ -120,5 +121,13 @@ export default function SuccessPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   )
 }
