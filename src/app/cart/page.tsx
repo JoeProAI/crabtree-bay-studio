@@ -18,6 +18,15 @@ export default function CartPage() {
   }
 
   const handleCheckout = async () => {
+    // ⭐ DEBUG: If you see this message, the REAL checkout function is being called! ⭐
+    console.log('🚀 REAL CHECKOUT FUNCTION CALLED - This should work!')
+    console.log('🛒 Cart has', cart.items.length, 'items')
+    
+    if (cart.items.length === 0) {
+      alert('Your cart is empty. Please add items before checkout.')
+      return
+    }
+    
     try {
       console.log('Starting checkout process...')
       console.log('Cart items:', cart.items)
