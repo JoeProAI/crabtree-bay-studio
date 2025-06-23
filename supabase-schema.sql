@@ -33,11 +33,11 @@ CREATE POLICY "Authenticated users can manage products" ON public.products
 
 -- Insert some initial sample products
 INSERT INTO public.products (name, description, price, image_url, category, status, featured) VALUES
-('Coastal Driftwood Sculpture', 'Hand-carved driftwood sculpture inspired by coastal beauty.', 89.99, 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop', 'Sculptures', 'active', true),
-('Handwoven Sea Glass Bracelet', 'Delicate bracelet featuring authentic sea glass collected from coastal beaches.', 34.99, 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=500&h=500&fit=crop', 'Jewelry', 'active', true),
-('Rustic Crab Shell Candle', 'Natural soy candle housed in a real crab shell with ocean breeze scent.', 24.99, 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a?w=500&h=500&fit=crop', 'Candles', 'active', true),
-('Ocean Wave Glass Bowl', 'Beautiful hand-blown glass bowl with blue and white swirl patterns reminiscent of ocean waves.', 125.00, 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=500&h=500&fit=crop', 'Glass Art', 'active', false),
-('Seashell Wind Chime', 'Handcrafted wind chime made from collected seashells and driftwood.', 45.99, 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=500&h=500&fit=crop', 'Home Decor', 'active', false);
+('Coastal Driftwood Sculpture', 'Hand-carved driftwood sculpture inspired by coastal beauty.', 89.99, 'https://images.unsplash.com/photo-1578662996442-48f60103fc96', 'Sculptures', 'active', true),
+('Handwoven Sea Glass Bracelet', 'Delicate bracelet featuring authentic sea glass collected from coastal beaches.', 34.99, 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338', 'Jewelry', 'active', true),
+('Rustic Crab Shell Candle', 'Natural soy candle housed in a real crab shell with ocean breeze scent.', 24.99, 'https://images.unsplash.com/photo-1602874801006-e26c4c5b5e8a', 'Candles', 'active', true),
+('Ocean Wave Glass Bowl', 'Beautiful hand-blown glass bowl with blue and white swirl patterns reminiscent of ocean waves.', 125.00, 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000', 'Glass Art', 'active', false),
+('Seashell Wind Chime', 'Handcrafted wind chime made from collected seashells and driftwood.', 45.99, 'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b', 'Home Decor', 'active', false);
 
 -- Orders table for future use
 CREATE TABLE IF NOT EXISTS public.orders (
