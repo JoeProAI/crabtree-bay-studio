@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { Plus, Edit, Trash2, Eye, EyeOff, Save, X } from 'lucide-react'
 import { Product } from '@/types'
 
@@ -371,10 +372,12 @@ export default function AdminPage() {
                   <tr key={product.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
-                        <img
+                        <Image
                           className="h-10 w-10 rounded-lg object-cover"
                           src={product.image_url}
                           alt={product.name}
+                          width={40}
+                          height={40}
                         />
                         <div className="ml-4">
                           <div className="text-sm font-medium text-slate-900">
