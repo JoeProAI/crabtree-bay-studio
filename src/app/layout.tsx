@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto_Slab, Work_Sans } from "next/font/google";
 import "./globals.css";
+import '../styles/woodworker-theme.css'
 import { CartProvider } from "@/hooks/useCart";
 import Layout from "@/components/Layout";
 
-const inter = Inter({ subsets: ["latin"] });
+const robotoSlab = Roboto_Slab({ 
+  subsets: ['latin'],
+  variable: '--font-heading'
+})
+
+const workSans = Work_Sans({
+  subsets: ['latin'],
+  variable: '--font-body'
+});
 
 export const metadata: Metadata = {
   title: "Crabtree Bay Studio - Handcrafted Goods",
@@ -27,7 +36,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className={`${robotoSlab.variable} ${workSans.variable} antialiased`}>
         <CartProvider>
           <Layout>
             {children}

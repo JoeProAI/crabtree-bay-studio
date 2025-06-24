@@ -26,6 +26,7 @@ export interface ProductInput {
   category: string
   status: 'active' | 'inactive'
   featured: boolean
+  inventory_count: number
 }
 
 export class ProductService {
@@ -173,14 +174,17 @@ export class ProductService {
 
     if (fetchError) {
       console.error('Error fetching product featured status:', fetchError)
-      throw new Error('Failed to fetch product featured status')
+      throw new Error('Failed to fetch product')
     }
 
-    const newFeatured = !product.featured
-
+    // Toggle the featured status
+    const newFeaturedStatus = !product.featured
     const { data, error } = await supabaseAdmin
       .from('products')
-      .update({ featured: newFeatured, updated_at: new Date().toISOString() })
+      .update({ 
+        featured: newFeaturedStatus,
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', id)
       .select()
       .single()
@@ -191,5 +195,92 @@ export class ProductService {
     }
 
     return data
+  }
+
+  // Decrement stock when item is purchased
+  static async decrementStock(id: string, quantity: number = 1): Promise<Product> {
+    const supabaseAdmin = getSupabaseAdmin()
+    
+    // First get current stock
+    const { data: product, error: fetchError } = await supabaseAdmin
+      .from('products')
+      .select('inventory_count')
+      .eq('id', id)
+      .single()
+
+    if (fetchError) {
+      console.error('Error fetching product stock:', fetchError)
+      throw new Error('Failed to fetch product stock')
+    }
+
+    const currentStock = product.inventory_count || 0
+    const newStock = Math.max(0, currentStock - quantity)
+
+    // Update stock
+    const { data, error } = await supabaseAdmin
+      .from('products')
+      .update({ 
+        inventory_count: newStock,
+        updated_at: new Date().toISOString() 
+      })
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Error updating stock:', error)
+      throw new Error('Failed to update stock')
+    }
+
+    return data
+  }
+
+  // Check if product is in stock
+  static async isInStock(id: string, requestedQuantity: number = 1): Promise<boolean> {
+    const supabaseAdmin = getSupabaseAdmin()
+    const { data: product, error } = await supabaseAdmin
+      .from('products')
+      .select('inventory_count')
+      .eq('id', id)
+      .single()
+
+    if (error) {
+      console.error('Error checking stock:', error)
+      return false
+    }
+
+    return (product.inventory_count || 0) >= requestedQuantity
+  }
+
+  // Upload product image to Supabase Storage
+  static async uploadProductImage(file: File): Promise<string> {
+    const supabaseAdmin = getSupabaseAdmin()
+    
+    // Generate a unique filename
+    const fileExt = file.name.split('.').pop()
+    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`
+    const filePath = `product-images/${fileName}`
+    
+    // Upload the file
+    const { data, error } = await supabaseAdmin
+      .storage
+      .from('products')
+      .upload(filePath, file, {
+        cacheControl: '3600',
+        upsert: false
+      })
+    
+    if (error) {
+      console.error('Error uploading image:', error)
+      throw new Error('Failed to upload product image')
+    }
+    
+    // Get public URL
+    const { data: { publicUrl } } = supabaseAdmin
+      .storage
+      .from('products')
+      .getPublicUrl(filePath)
+    
+    return publicUrl
   }
 }

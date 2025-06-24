@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { Plus, Edit, Trash2, Eye, EyeOff, Save, X } from 'lucide-react'
 import { Product } from '@/types'
@@ -18,18 +18,37 @@ export default function AdminPage() {
     image_url: '',
     category: '',
     status: 'active' as const,
-    featured: false
+    featured: false,
+    inventory_count: 0
   })
 
-  // Simple password authentication (in production, use proper auth)
-  const handleLogin = (e: React.FormEvent) => {
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  // Admin authentication using environment variables
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (password === 'crabtree2025') {
-      setIsAuthenticated(true)
-      localStorage.setItem('admin-auth', 'true')
-      fetchProducts() // Load products after login
-    } else {
-      alert('Incorrect password')
+    
+    try {
+      const response = await fetch('/api/admin/auth', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      })
+
+      if (response.ok) {
+        setIsAuthenticated(true)
+        localStorage.setItem('admin_authenticated', 'true')
+      } else {
+        const data = await response.json()
+        alert(data.error || 'Authentication failed')
+      }
+    } catch (error) {
+      console.error('Login error:', error)
+      alert('Authentication failed. Please try again.')
     }
   }
 
@@ -64,21 +83,59 @@ export default function AdminPage() {
     }
   }
 
-  const handleAddProduct = async () => {
-    if (!newProduct.name || !newProduct.price) {
-      alert('Please fill in required fields')
-      return
-    }
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    setUploadProgress(10) // Start progress
 
     try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/admin/upload', {
+        method: 'POST',
+        body: formData,
+      })
+
+      setUploadProgress(90) // Almost done
+
+      if (response.ok) {
+        const data = await response.json()
+        setNewProduct({ ...newProduct, image_url: data.imageUrl })
+        setUploadProgress(100) // Complete
+      } else {
+        const error = await response.json()
+        alert(`Upload failed: ${error.error}`)
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error)
+      alert('Error uploading file')
+    } finally {
+      setIsUploading(false)
+      // Reset progress after a delay
+      setTimeout(() => setUploadProgress(0), 1000)
+    }
+  }
+
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      if (!newProduct.name || !newProduct.price) {
+        alert('Name and price are required')
+        return
+      }
+
       const productData = {
         name: newProduct.name,
         description: newProduct.description,
         price: parseFloat(newProduct.price),
-        image_url: newProduct.image_url || 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=500&h=500&fit=crop',
+        image_url: newProduct.image_url,
         category: newProduct.category,
         status: newProduct.status,
         featured: newProduct.featured,
+        inventory_count: newProduct.inventory_count
       }
 
       const response = await fetch('/api/admin/products', {
@@ -99,7 +156,8 @@ export default function AdminPage() {
           image_url: '',
           category: '',
           status: 'active',
-          featured: false
+          featured: false,
+          inventory_count: 0
         })
         setShowAddForm(false)
         alert('Product added successfully!')
@@ -288,17 +346,73 @@ export default function AdminPage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
-                  Image URL
+                  Product Image
                 </label>
-                <input
-                  type="url"
-                  value={newProduct.image_url}
-                  onChange={(e) => setNewProduct({...newProduct, image_url: e.target.value})}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="https://example.com/image.jpg"
-                />
+                <div className="flex flex-col md:flex-row md:items-center md:space-x-4 mb-2">
+                  <div className="flex-shrink-0 w-full md:w-24 h-24 bg-gray-100 rounded-lg overflow-hidden mb-2 md:mb-0">
+                    {newProduct.image_url ? (
+                      <div className="relative w-full h-full">
+                        <Image 
+                          src={newProduct.image_url} 
+                          alt="Product preview" 
+                          fill 
+                          style={{objectFit: 'contain'}} 
+                          className="p-1"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-200 text-gray-400">
+                        No Image
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      accept="image/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                      disabled={isUploading}
+                    >
+                      {isUploading ? 'Uploading...' : 'Upload Image'}
+                    </button>
+                    {newProduct.image_url && (
+                      <button 
+                        type="button" 
+                        onClick={() => setNewProduct({...newProduct, image_url: ''})}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                  {uploadProgress > 0 && (
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div 
+                        className="bg-blue-600 h-2.5 rounded-full" 
+                        style={{width: `${uploadProgress}%`}}
+                      ></div>
+                    </div>
+                  )}
+                  {!newProduct.image_url && !isUploading && (
+                    <p className="text-sm text-gray-500">Upload a product image or enter URL below</p>
+                  )}
+                  <input
+                    type="url"
+                    value={newProduct.image_url}
+                    onChange={(e) => setNewProduct({...newProduct, image_url: e.target.value})}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="https://example.com/image.jpg"
+                  />
+                </div>
               </div>
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-2">
                   Description
                 </label>
@@ -310,16 +424,32 @@ export default function AdminPage() {
                   placeholder="Describe your product..."
                 />
               </div>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center">
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
+                  Stock Quantity
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={newProduct.inventory_count}
+                  onChange={(e) => setNewProduct({...newProduct, inventory_count: parseInt(e.target.value) || 0})}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="0"
+                />
+              </div>
+              <div className="col-span-1 md:col-span-2">
+                <div className="flex items-center space-x-2 mb-4">
                   <input
                     type="checkbox"
+                    id="featured"
                     checked={newProduct.featured}
                     onChange={(e) => setNewProduct({...newProduct, featured: e.target.checked})}
-                    className="mr-2"
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                   />
-                  Featured Product
-                </label>
+                  <label htmlFor="featured" className="text-sm font-medium text-slate-700">
+                    Featured Product
+                  </label>
+                </div>
               </div>
             </div>
             <div className="flex space-x-4 mt-6">
@@ -361,6 +491,9 @@ export default function AdminPage() {
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Featured
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Stock
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Actions

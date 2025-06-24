@@ -1,0 +1,118 @@
+/* Woodworker Shop Theme */
+:root {
+  /* Color Palette */
+  --wood-dark: #5d4037;
+  --wood-medium: #8d6e63;
+  --wood-light: #d7ccc8;
+  --sawdust: #f5f5dc;
+  --walnut: #3e2723;
+  --cedar: #a1887f;
+  --mahogany: #795548;
+  --workshop-metal: #78909c;
+  --workshop-concrete: #eceff1;
+  
+  /* Updated Theme Colors */
+  --primary: var(--wood-dark);
+  --primary-hover: var(--walnut);
+  --secondary: var(--cedar);
+  --accent: var(--workshop-metal);
+  --background: var(--workshop-concrete);
+  --text: var(--walnut);
+  --text-light: var(--wood-light);
+  --border: var(--wood-medium);
+  
+  /* Font Families */
+  --font-heading: 'Roboto Slab', serif;
+  --font-body: 'Work Sans', sans-serif;
+}
+
+/* Apply woodworker theme to common elements */
+body {
+  background-color: var(--background);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  color: var(--primary);
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary);
+  border-color: var(--secondary);
+  color: white;
+}
+
+/* Cards and containers */
+.card, .container-wood {
+  border: 1px solid var(--border);
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Wood grain texture for special elements */
+.wood-texture {
+  background-image: url('/images/wood-grain.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+/* Navigation */
+.navbar-wood {
+  background-color: var(--primary);
+  color: white;
+}
+
+/* Footer */
+.footer-wood {
+  background-color: var(--walnut);
+  color: var(--text-light);
+}
+
+/* Product cards */
+.product-card {
+  border: 1px solid var(--wood-light);
+  background-color: white;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero section */
+.hero-wood {
+  background-color: var(--wood-medium);
+  color: white;
+  padding: 4rem 0;
+}
+
+/* Workshop tools icon styling */
+.tool-icon {
+  color: var(--accent);
+}
+
+/* Custom badge for handcrafted items */
+.badge-handcrafted {
+  background-color: var(--mahogany);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
