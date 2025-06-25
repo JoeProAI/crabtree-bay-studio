@@ -7,6 +7,13 @@ export async function POST(request: NextRequest) {
     // Get admin password from environment variable
     const adminPassword = process.env.ADMIN_PASSWORD
     
+    // Add debugging information
+    console.log('Admin auth attempt:', { 
+      hasPassword: !!password, 
+      hasAdminPassword: !!adminPassword,
+      nodeEnv: process.env.NODE_ENV 
+    })
+    
     if (!adminPassword) {
       console.error('ADMIN_PASSWORD environment variable is not set')
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
@@ -18,9 +25,11 @@ export async function POST(request: NextRequest) {
     if (password === adminPassword) {
       // Success - return a token or session identifier
       // In a real app, you would use a proper JWT or session management
+      console.log('Admin authentication successful')
       return NextResponse.json({ success: true })
     } else {
       // Failed authentication
+      console.log('Admin authentication failed - invalid password')
       return NextResponse.json({ error: 'Invalid password' }, { status: 401 })
     }
   } catch (error) {
