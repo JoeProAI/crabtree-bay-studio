@@ -83,7 +83,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Wood grain texture for special elements */
 .wood-texture {
-  background-image: url('/images/wood-grain.jpg');
+  background-image: url('/images/wood-grain.png');
   background-size: cover;
   background-position: center;
   color: var(--text-dark);
