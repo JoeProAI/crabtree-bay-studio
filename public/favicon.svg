@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="16" cy="16" r="16" fill="#5D4037"/>
+  
+  <!-- Hammer icon -->
+  <path d="M24 8L22 10L19 7L21 5L20 4L16 8L17 9L9 17L8 16L4 20L5 21L7 19L10 22L8 24L9 25L13 21L12 20L20 12L21 13L25 9L24 8Z" fill="#D7CCC8"/>
+</svg>

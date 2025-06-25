@@ -13,14 +13,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
     }
     
-    // Hash the provided password for comparison
-    // In a real production app, you would use a proper password hashing library like bcrypt
-    const hashedPassword = createHash('sha256').update(password).digest('hex')
+    // For simplicity, directly compare the password with the environment variable
+    // In a production app, you would use a proper password hashing library like bcrypt
     
-    // Get the stored hashed password from env (should be pre-hashed)
-    const storedHashedPassword = adminPassword
-    
-    if (hashedPassword === storedHashedPassword) {
+    if (password === adminPassword) {
       // Success - return a token or session identifier
       // In a real app, you would use a proper JWT or session management
       return NextResponse.json({ success: true })

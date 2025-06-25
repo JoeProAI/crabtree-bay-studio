@@ -17,9 +17,14 @@ const workSans = Work_Sans({
 
 export const metadata: Metadata = {
   title: "Crabtree Bay Studio - Handcrafted Goods",
-  description: "Handcrafted goods made with love. Each piece tells a story of coastal inspiration and artisan craftsmanship.",
-  keywords: "handcrafted, artisan, coastal, handmade, crafts",
+  description: "Handcrafted goods made with love. Each piece tells a story of woodworking tradition and artisan craftsmanship.",
+  keywords: "handcrafted, artisan, woodworking, handmade, crafts",
   authors: [{ name: "Lora and Ken" }],
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     title: "Crabtree Bay Studio - Handcrafted Goods",
     description: "Handcrafted goods made with love in Maryland",

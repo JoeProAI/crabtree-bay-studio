@@ -9,7 +9,10 @@
   --cedar: #a1887f;
   --mahogany: #795548;
   --workshop-metal: #78909c;
-  --workshop-concrete: #eceff1;
+  --workshop-concrete: #f5f5f0;
+  --text-dark: #2d2d2d;
+  --text-medium: #4a4a4a;
+  --cream: #fff8e1;
   
   /* Updated Theme Colors */
   --primary: var(--wood-dark);
@@ -17,9 +20,10 @@
   --secondary: var(--cedar);
   --accent: var(--workshop-metal);
   --background: var(--workshop-concrete);
-  --text: var(--walnut);
-  --text-light: var(--wood-light);
+  --text: var(--text-dark);
+  --text-light: var(--text-medium);
   --border: var(--wood-medium);
+  --card-bg: var(--cream);
   
   /* Font Families */
   --font-heading: 'Roboto Slab', serif;
@@ -31,6 +35,8 @@ body {
   background-color: var(--background);
   color: var(--text);
   font-family: var(--font-body);
+  background-image: url('/images/subtle-wood-pattern.png');
+  background-repeat: repeat;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -42,7 +48,9 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary {
   background-color: var(--primary);
   border-color: var(--primary);
-  color: white;
+  color: var(--sawdust);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
@@ -53,14 +61,24 @@ h1, h2, h3, h4, h5, h6 {
 .btn-secondary {
   background-color: var(--secondary);
   border-color: var(--secondary);
-  color: white;
+  color: var(--text-dark);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
 }
 
 /* Cards and containers */
 .card, .container-wood {
   border: 1px solid var(--border);
-  background-color: white;
+  background-color: var(--card-bg);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover, .container-wood:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* Wood grain texture for special elements */
@@ -68,26 +86,52 @@ h1, h2, h3, h4, h5, h6 {
   background-image: url('/images/wood-grain.jpg');
   background-size: cover;
   background-position: center;
-  color: white;
+  color: var(--text-dark);
+  text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5);
+  position: relative;
+}
+
+.wood-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.2);
+  z-index: 0;
+}
+
+.wood-texture > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Navigation */
 .navbar-wood {
   background-color: var(--primary);
-  color: white;
+  color: var(--sawdust);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  border-bottom: 2px solid var(--mahogany);
 }
 
 /* Footer */
 .footer-wood {
   background-color: var(--walnut);
-  color: var(--text-light);
+  color: var(--sawdust);
+  border-top: 2px solid var(--mahogany);
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 /* Product cards */
 .product-card {
   border: 1px solid var(--wood-light);
-  background-color: white;
-  transition: transform 0.3s ease;
+  background-color: var(--card-bg);
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-card:hover {
@@ -98,8 +142,27 @@ h1, h2, h3, h4, h5, h6 {
 /* Hero section */
 .hero-wood {
   background-color: var(--wood-medium);
-  color: white;
+  color: var(--text-dark);
   padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 3px solid var(--mahogany);
+}
+
+.hero-wood::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%);
+  z-index: 1;
+}
+
+.hero-wood > * {
+  position: relative;
+  z-index: 2;
 }
 
 /* Workshop tools icon styling */
@@ -110,9 +173,29 @@ h1, h2, h3, h4, h5, h6 {
 /* Custom badge for handcrafted items */
 .badge-handcrafted {
   background-color: var(--mahogany);
-  color: white;
+  color: var(--sawdust);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-size: 0.75rem;
   font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--wood-dark);
+}
+
+/* Add custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--wood-light);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--wood-medium);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--wood-dark);
 }

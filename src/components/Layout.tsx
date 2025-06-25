@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useCart } from '@/hooks/useCart'
 import { ShoppingCart, Menu, X, User, Hammer, Axe, CircleDot } from 'lucide-react'
 
@@ -24,8 +25,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
-              <div className="flex items-center justify-center bg-mahogany rounded-full p-2">
-                <Hammer className="h-8 w-8 text-sawdust" />
+              <div className="flex items-center justify-center rounded-full overflow-hidden h-12 w-12">
+                <Image src="/logo.svg" alt="Crabtree Bay Studio" width={48} height={48} className="object-cover" />
               </div>
               <div className="text-2xl font-bold text-sawdust font-heading">
                 Crabtree Bay Studio
