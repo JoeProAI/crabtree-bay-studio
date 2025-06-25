@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useCart } from '@/hooks/useCart'
 import { ShoppingCart, Menu, X, User, Hammer, Axe, CircleDot } from 'lucide-react'
 

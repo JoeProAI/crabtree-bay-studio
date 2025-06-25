@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Product } from '@/types'
 import ProductCard from '@/components/ProductCard'
-import { ArrowRight, Star, Heart, Truck, Hammer, Axe, CircleDot } from 'lucide-react'
+import { ArrowRight, Truck, Hammer, CircleDot } from 'lucide-react'
 
 export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])

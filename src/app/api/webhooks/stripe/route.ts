@@ -2,10 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { ProductService } from '@/lib/supabase-admin'
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-05-28.basil',
-})
+// Initialize Stripe with runtime check
+let stripe: Stripe | null = null
+
+// Initialize Stripe only when the API is called (at runtime)
+function getStripeInstance(): Stripe {
+  if (!stripe) {
+    if (!process.env.STRIPE_SECRET_KEY) {
+      throw new Error('Missing STRIPE_SECRET_KEY environment variable')
+    }
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: '2025-05-28.basil',
+    })
+  }
+  return stripe
+}
 
 // This is your Stripe webhook secret for testing your endpoint locally
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
@@ -17,17 +28,21 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event
 
   try {
+    // Get Stripe instance at runtime
+    const stripeInstance = getStripeInstance()
+    
     // Verify the event came from Stripe
     if (endpointSecret) {
-      event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
+      event = stripeInstance.webhooks.constructEvent(payload, sig, endpointSecret)
     } else {
       // For testing without a webhook secret
       event = JSON.parse(payload) as Stripe.Event
       console.log('⚠️ Webhook signature verification bypassed')
     }
-  } catch (err: any) {
-    console.error(`Webhook Error: ${err.message}`)
-    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 })
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred'
+    console.error(`Webhook Error: ${errorMessage}`)
+    return NextResponse.json({ error: `Webhook Error: ${errorMessage}` }, { status: 400 })
   }
 
   // Handle the checkout.session.completed event

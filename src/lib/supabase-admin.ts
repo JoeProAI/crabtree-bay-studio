@@ -262,7 +262,7 @@ export class ProductService {
     const filePath = `product-images/${fileName}`
     
     // Upload the file
-    const { data, error } = await supabaseAdmin
+    const { error } = await supabaseAdmin
       .storage
       .from('products')
       .upload(filePath, file, {

@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from 'react'
 import { Product } from '@/types'
-import ProductCard from '@/components/ProductCard'
 import { Search, Filter } from 'lucide-react'
+import Image from 'next/image'
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -152,10 +152,12 @@ export default function ShopPage() {
                 <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-wood-light hover:border-wood-medium transition-colors">
                   <div className="relative h-48 bg-workshop-concrete">
                     {product.image_url ? (
-                      <img
+                      <Image
                         src={product.image_url}
                         alt={product.name}
                         className="object-cover h-full w-full"
+                        width={300}
+                        height={200}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-wood-light">
