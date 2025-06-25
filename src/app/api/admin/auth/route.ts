@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const { password } = await request.json()
     
     // Temporary hardcoded password to bypass env issues
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'
+    const adminPassword = process.env.ADMIN_PASSWORD || 'adminnimda'
     
     console.log('Admin auth attempt with password:', password)
     
