@@ -48,7 +48,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/shop"
-                className="bg-mahogany hover:bg-wood-dark text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
+                className="bg-mahogany hover:bg-wood-dark text-cream px-8 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2"
               >
                 <span>Shop Collection</span>
                 <ArrowRight className="h-5 w-5" />
@@ -137,7 +137,7 @@ export default function HomePage() {
           <div className="text-center">
             <Link
               href="/shop"
-              className="bg-wood-dark hover:bg-walnut text-white px-8 py-3 rounded-lg font-medium transition-colors inline-flex items-center space-x-2"
+              className="bg-wood-dark hover:bg-walnut text-cream px-8 py-3 rounded-lg font-medium transition-colors inline-flex items-center space-x-2"
             >
               <span>View All Products</span>
               <ArrowRight className="h-5 w-5" />
@@ -149,7 +149,7 @@ export default function HomePage() {
       {/* Newsletter Section */}
       <section className="py-16 bg-mahogany wood-texture">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-sawdust mb-4 font-heading">Stay Connected</h2>
+          <h2 className="text-3xl font-bold text-cream mb-4 font-heading">Stay Connected</h2>
           <p className="text-wood-light mb-8 max-w-2xl mx-auto">
             Be the first to know about new collections, special offers, and behind-the-scenes stories 
             from our woodworking studio.
@@ -160,7 +160,7 @@ export default function HomePage() {
               placeholder="Enter your email"
               className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-wood-medium focus:outline-none"
             />
-            <button className="bg-wood-dark hover:bg-walnut text-white px-6 py-3 rounded-lg font-medium transition-colors">
+            <button className="bg-wood-dark hover:bg-walnut text-cream px-6 py-3 rounded-lg font-medium transition-colors">
               Subscribe
             </button>
           </div>

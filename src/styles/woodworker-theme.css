@@ -8,17 +8,17 @@
   --accent-light: #DEB887;      /* Burlywood */
   
   /* Background Colors */
-  --bg-primary: #1a1614;        /* Very dark brown */
-  --bg-secondary: #2d2520;      /* Dark brown */
-  --bg-tertiary: #3d342c;       /* Medium brown */
-  --bg-card: #4a3f36;           /* Card background */
-  --bg-input: #5a4d42;          /* Input background */
+  --bg-primary: #f8f6f2;        /* Light cream background */
+  --bg-secondary: #f0ebe4;      /* Slightly darker cream */
+  --bg-tertiary: #e8ddd1;       /* Medium cream */
+  --bg-card: #ffffff;           /* Pure white cards */
+  --bg-input: #ffffff;          /* White input background */
   
-  /* Text Colors - High Contrast */
-  --text-primary: #ffffff;       /* Pure white */
-  --text-secondary: #f5f5f5;     /* Off white */
-  --text-muted: #cccccc;         /* Light gray */
-  --text-accent: #F4A460;        /* Sandy brown for highlights */
+  /* Text Colors - HIGH CONTRAST DARK */
+  --text-primary: #2c1810;       /* Very dark brown */
+  --text-secondary: #3d2419;     /* Dark brown */
+  --text-muted: #5a4033;         /* Medium brown */
+  --text-accent: #8B4513;        /* Saddle brown for highlights */
   
   /* Border and Shadow */
   --border-light: #6b5b50;       /* Light border */
@@ -31,7 +31,7 @@
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
   --gradient-card: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
-  --gradient-input: linear-gradient(135deg, var(--bg-input) 0%, var(--bg-card) 100%);
+  --gradient-input: linear-gradient(135deg, var(--bg-input) 0%, var(--bg-secondary) 100%);
 }
 
 /* Global Reset and Base Styles */
@@ -103,7 +103,7 @@ p {
   box-shadow: var(--shadow-md);
 }
 
-/* Form Elements - PROPER CONTRAST */
+/* Form Elements - HIGH CONTRAST */
 .form-control, input, textarea, select {
   background: var(--gradient-input) !important;
   border: 2px solid var(--border-medium) !important;
@@ -169,7 +169,7 @@ label {
 }
 
 .navbar-wood a:hover {
-  color: var(--accent) !important;
+  color: var(--accent-light) !important;
 }
 
 /* Footer */
@@ -208,13 +208,13 @@ a {
 }
 
 a:hover {
-  color: var(--accent-light);
+  color: var(--primary);
   text-decoration: underline;
 }
 
 /* Hero Section */
 .hero-bg, .hero-wood {
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--primary) 50%, var(--bg-secondary) 100%);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 50%, var(--accent) 100%);
   color: var(--text-primary);
   padding: 4rem 0;
   position: relative;
@@ -248,96 +248,98 @@ a:hover {
   box-shadow: var(--shadow-lg);
 }
 
-/* Price Display */
-.price-text {
-  color: var(--accent) !important;
-  font-weight: bold;
-  font-size: 1.25rem;
-}
-
-/* Modern Layout Classes */
-.bg-dark-custom {
-  background: var(--gradient-card) !important;
-}
-
-.bg-card-custom {
-  background: var(--gradient-card) !important;
-}
-
-.border-dark-custom {
-  border-color: var(--border-light) !important;
-}
-
-/* Text Utilities */
-.text-primary {
-  color: var(--text-primary) !important;
-}
-
-.text-secondary {
-  color: var(--text-secondary) !important;
-}
-
-.text-muted {
-  color: var(--text-muted) !important;
-}
-
-.text-accent {
-  color: var(--accent) !important;
-}
-
-/* Spacing and Layout */
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-/* Custom Header Styling */
-header {
-  background: var(--gradient-primary) !important;
-}
-
-/* Admin Panel Specific Fixes */
-.admin-container {
-  background: var(--gradient-card);
-  border: 1px solid var(--border-light);
-  border-radius: 12px;
-  padding: 2rem;
-  color: var(--text-primary);
-}
-
-.admin-form input, .admin-form textarea, .admin-form select {
-  background: var(--bg-input) !important;
-  color: var(--text-primary) !important;
-  border: 2px solid var(--border-light) !important;
-}
-
-/* Cart and Shop Improvements */
-.cart-item, .product-item {
-  background: var(--gradient-card);
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-/* Success/Error Messages */
+/* Error and Success Messages */
 .alert {
-  padding: 1rem;
   border-radius: 8px;
+  padding: 1rem;
   margin-bottom: 1rem;
-  font-weight: 600;
+  border: 1px solid;
 }
 
 .alert-success {
-  background: linear-gradient(135deg, #2d5a2d 0%, #4a7c4a 100%);
+  background: linear-gradient(135deg, #2d5a2d 0%, #3d6a3d 100%);
   color: var(--text-primary);
-  border: 1px solid #5a8a5a;
+  border-color: #4a7a4a;
 }
 
-.alert-error {
-  background: linear-gradient(135deg, #5a2d2d 0%, #7c4a4a 100%);
+.alert-error, .alert-danger {
+  background: linear-gradient(135deg, #5a2d2d 0%, #6a3d3d 100%);
   color: var(--text-primary);
-  border: 1px solid #8a5a5a;
+  border-color: #7a4a4a;
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #5a4d2d 0%, #6a5a3d 100%);
+  color: var(--text-primary);
+  border-color: #7a6a4a;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #2d4d5a 0%, #3d5a6a 100%);
+  color: var(--text-primary);
+  border-color: #4a6a7a;
+}
+
+/* Loading States */
+.loading, .spinner {
+  color: var(--text-accent);
+}
+
+/* Modal and Overlays */
+.modal, .overlay {
+  background: var(--gradient-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Cart and Product Specific */
+.cart-item, .product-item {
+  background: var(--gradient-card);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Admin Panel Specific */
+.admin-panel {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.admin-nav {
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+}
+
+/* Custom utility classes */
+.text-dark-brown { color: var(--text-primary) !important; }
+.text-medium-brown { color: var(--text-secondary) !important; }
+.text-muted-brown { color: var(--text-muted) !important; }
+.text-accent { color: var(--text-accent) !important; }
+
+.bg-wood { background: var(--gradient-card) !important; }
+.bg-wood-light { background: var(--bg-secondary) !important; }
+.bg-wood-lighter { background: var(--bg-primary) !important; }
+
+/* Price and Number displays */
+.price, .number, .currency {
+  color: var(--text-accent);
+  font-weight: 600;
+}
+
+/* Status indicators */
+.status-active, .status-success {
+  color: #90d690;
+}
+
+.status-inactive, .status-error {
+  color: #d69090;
+}
+
+.status-pending, .status-warning {
+  color: #d6d690;
 }
