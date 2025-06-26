@@ -25,8 +25,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
-              <div className="flex items-center justify-center rounded-full overflow-hidden h-12 w-12">
-                <Image src="/logo.png" alt="Crabtree Bay Studio" width={48} height={48} className="object-cover" />
+              <div className="flex items-center justify-center h-16 w-16">
+                <Image src="/logo.png" alt="Crabtree Bay Studio" width={64} height={64} className="object-contain" />
               </div>
               <div className="text-2xl font-bold text-sawdust font-heading">
                 Crabtree Bay Studio

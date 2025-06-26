@@ -4,10 +4,15 @@ export async function POST(request: NextRequest) {
   try {
     const { password } = await request.json()
     
-    // Temporary hardcoded password to bypass env issues
-    const adminPassword = process.env.ADMIN_PASSWORD || 'adminnimda'
+    // Use only environment variable - no hardcoded fallback for security
+    const adminPassword = process.env.ADMIN_PASSWORD
     
-    console.log('Admin auth attempt with password:', password)
+    if (!adminPassword) {
+      console.error('ADMIN_PASSWORD environment variable not set')
+      return NextResponse.json({ error: 'Server configuration error' }, { status: 500 })
+    }
+    
+    console.log('Admin auth attempt')
     
     if (password === adminPassword) {
       console.log('Admin authentication successful')

@@ -1,120 +1,227 @@
-/* Woodworker Shop Theme */
+/* Professional Woodworker Theme - Complete Redesign */
 :root {
-  /* Color Palette */
-  --primary: #3d2817;           /* Medium-dark brown */
-  --primary-hover: #2d1810;     /* Darker brown for hover */
-  --secondary: #5a4332;         /* Medium brown */
-  --accent: #d4a574;            /* Light tan/cream */
-  --mahogany: #6b3410;          /* Rich mahogany */
-  --oak: #8b6f47;               /* Light oak */
-  --pine: #6a5445;              /* Medium pine */
-  --sawdust: #f5f1e8;           /* Very light cream */
-  --text-dark: #2d1810;         /* Dark brown text */
-  --text-light: #f5f1e8;        /* Light cream text */
-  --text-contrast: #ffffff;     /* Pure white for high contrast */
-  --bg-primary: #2a2a2a;        /* Medium dark background */
-  --bg-secondary: #3a3a3a;      /* Lighter secondary background */
-  --card-bg: #4a4a4a;           /* Light card background */
-  --border: #6a6a6a;            /* Light border */
-  --shadow: rgba(0, 0, 0, 0.5); /* Softer shadows */
-  --gradient-primary: linear-gradient(135deg, #3d2817 0%, #5a4332 100%);
-  --gradient-secondary: linear-gradient(135deg, #2a2a2a 0%, #4a4a4a 100%);
-  --font-heading: 'Merriweather', serif;
-  --font-body: 'Work Sans', sans-serif;
+  /* Modern Color Palette with Excellent Contrast */
+  --primary: #8B4513;           /* Saddle brown */
+  --primary-hover: #A0522D;     /* Lighter brown for hover */
+  --secondary: #D2691E;         /* Chocolate */
+  --accent: #F4A460;            /* Sandy brown */
+  --accent-light: #DEB887;      /* Burlywood */
+  
+  /* Background Colors */
+  --bg-primary: #1a1614;        /* Very dark brown */
+  --bg-secondary: #2d2520;      /* Dark brown */
+  --bg-tertiary: #3d342c;       /* Medium brown */
+  --bg-card: #4a3f36;           /* Card background */
+  --bg-input: #5a4d42;          /* Input background */
+  
+  /* Text Colors - High Contrast */
+  --text-primary: #ffffff;       /* Pure white */
+  --text-secondary: #f5f5f5;     /* Off white */
+  --text-muted: #cccccc;         /* Light gray */
+  --text-accent: #F4A460;        /* Sandy brown for highlights */
+  
+  /* Border and Shadow */
+  --border-light: #6b5b50;       /* Light border */
+  --border-medium: #5a4d42;      /* Medium border */
+  --border-dark: #3d342c;        /* Dark border */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  --gradient-card: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-tertiary) 100%);
+  --gradient-input: linear-gradient(135deg, var(--bg-input) 0%, var(--bg-card) 100%);
 }
 
-/* Apply woodworker theme to common elements */
+/* Global Reset and Base Styles */
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: var(--gradient-secondary);
-  color: var(--text-contrast);
-  font-family: var(--font-body);
-  background-image: url('/images/subtle-wood-pattern.png');
-  background-repeat: repeat;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  color: var(--text-primary);
+  font-family: 'system-ui', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.6;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
 }
 
+/* Typography */
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  color: var(--text-contrast);
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  color: var(--text-primary);
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1rem;
 }
 
-/* Buttons */
-.btn-primary {
-  background: var(--gradient-primary);
-  border: 2px solid var(--accent);
-  color: var(--text-contrast);
-  box-shadow: 0 4px 8px var(--shadow);
-  transition: all 0.3s ease;
+p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+/* Modern Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--primary);
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  border-color: var(--sawdust);
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px var(--shadow);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--accent) 100%);
 }
 
 .btn-secondary {
-  background: var(--gradient-secondary);
-  border: 2px solid var(--oak);
-  color: var(--text-contrast);
-  box-shadow: 0 4px 8px var(--shadow);
-  transition: all 0.3s ease;
-  border-radius: 8px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-card);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Form Elements - PROPER CONTRAST */
+.form-control, input, textarea, select {
+  background: var(--gradient-input) !important;
+  border: 2px solid var(--border-medium) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 1rem !important;
+  color: var(--text-primary) !important;
+  font-size: 1rem !important;
+  transition: all 0.2s ease !important;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+}
+
+.form-control:focus, input:focus, textarea:focus, select:focus {
+  outline: none !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(244, 164, 96, 0.2) !important;
+  background: var(--bg-card) !important;
+}
+
+.form-control::placeholder, input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+  opacity: 0.8;
+}
+
+/* Labels */
+label {
+  color: var(--text-primary) !important;
   font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
 }
 
-/* Cards and containers */
-.card, .container-wood {
-  border: 2px solid var(--border);
-  background: var(--gradient-secondary);
-  box-shadow: 0 8px 16px var(--shadow);
+/* Cards and Containers */
+.card, .container-wood, .product-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-light);
   border-radius: 12px;
-  color: var(--text-contrast);
   padding: 1.5rem;
-  position: relative;
-  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
-.card::before, .container-wood::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--gradient-primary);
-  z-index: 1;
-}
-
-/* Product cards */
-.product-card {
-  background: var(--gradient-secondary);
-  border: 2px solid var(--border);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: var(--text-contrast);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.product-card:hover {
+.card:hover, .container-wood:hover, .product-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px var(--shadow);
+  box-shadow: var(--shadow-lg);
   border-color: var(--accent);
 }
 
-/* Hero section */
-.hero-wood {
-  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--primary) 50%, var(--bg-secondary) 100%);
-  color: var(--text-contrast);
-  padding: 4rem 0;
-  position: relative;
+/* Navigation */
+.navbar-wood {
+  background: var(--gradient-primary) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-md);
+  border-bottom: 2px solid var(--accent);
+  backdrop-filter: blur(10px);
 }
 
-.hero-wood::before {
+.navbar-wood a {
+  color: var(--text-primary) !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.navbar-wood a:hover {
+  color: var(--accent) !important;
+}
+
+/* Footer */
+.footer-wood {
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+  border-top: 2px solid var(--accent);
+  padding: 2rem 0;
+}
+
+/* Tables */
+.table, .table-dark {
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.table th, .table td, .table-dark th, .table-dark td {
+  border-color: var(--border-medium) !important;
+  color: var(--text-primary) !important;
+  padding: 1rem;
+}
+
+.table th, .table-dark th {
+  background: var(--gradient-primary) !important;
+  font-weight: 600;
+}
+
+/* Links */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent-light);
+  text-decoration: underline;
+}
+
+/* Hero Section */
+.hero-bg, .hero-wood {
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--primary) 50%, var(--bg-secondary) 100%);
+  color: var(--text-primary);
+  padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg::before, .hero-wood::before {
   content: '';
   position: absolute;
   top: 0;
@@ -126,166 +233,111 @@ h1, h2, h3, h4, h5, h6 {
   z-index: 0;
 }
 
-.hero-wood > * {
+.hero-bg > *, .hero-wood > * {
   position: relative;
   z-index: 1;
 }
 
-/* Wood grain texture for special elements */
+/* Wood Texture Elements */
 .wood-texture {
-  background-image: url('/images/wood-grain.png');
-  background-size: cover;
-  background-position: center;
-  color: var(--text-contrast);
-  background-blend-mode: overlay;
-  background-color: var(--primary);
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('/images/wood-grain.png') center/cover;
+  color: var(--text-primary);
   position: relative;
   border-radius: 12px;
   overflow: hidden;
+  box-shadow: var(--shadow-lg);
 }
 
-.wood-texture::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-primary);
-  opacity: 0.8;
-  z-index: 0;
+/* Price Display */
+.price-text {
+  color: var(--accent) !important;
+  font-weight: bold;
+  font-size: 1.25rem;
 }
 
-.wood-texture > * {
-  position: relative;
-  z-index: 1;
-  color: var(--text-contrast);
-}
-
-/* Navigation */
-.navbar-wood {
-  background: var(--gradient-primary);
-  color: var(--text-contrast);
-  box-shadow: 0 4px 16px var(--shadow);
-  border-bottom: 3px solid var(--accent);
-  backdrop-filter: blur(10px);
-}
-
-/* Footer */
-.footer-wood {
-  background: var(--gradient-primary);
-  color: var(--text-contrast);
-  border-top: 3px solid var(--accent);
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-/* Forms */
-.form-control {
-  background-color: var(--card-bg);
-  border: 2px solid var(--border);
-  color: var(--text-contrast);
-  border-radius: 8px;
-  padding: 0.75rem;
-}
-
-.form-control:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 0.2rem rgba(212, 165, 116, 0.25);
-  background-color: var(--card-bg);
-  color: var(--text-contrast);
-}
-
-.form-control::placeholder {
-  color: #cccccc;
-}
-
-/* Tables */
-.table-dark {
-  background-color: var(--card-bg);
-  color: var(--text-contrast);
-}
-
-.table-dark th,
-.table-dark td {
-  border-color: var(--border);
-  color: var(--text-contrast);
-}
-
-/* Links */
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-a:hover {
-  color: var(--sawdust);
-  text-decoration: underline;
-}
-
-/* Additional design utilities */
+/* Modern Layout Classes */
 .bg-dark-custom {
-  background: var(--gradient-secondary) !important;
+  background: var(--gradient-card) !important;
 }
 
 .bg-card-custom {
-  background: var(--gradient-secondary) !important;
+  background: var(--gradient-card) !important;
 }
 
 .border-dark-custom {
-  border-color: var(--border) !important;
+  border-color: var(--border-light) !important;
 }
 
-/* Special design elements */
-.design-accent {
-  position: relative;
+/* Text Utilities */
+.text-primary {
+  color: var(--text-primary) !important;
 }
 
-.design-accent::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 50px;
-  height: 3px;
-  background: var(--accent);
-  border-radius: 2px;
+.text-secondary {
+  color: var(--text-secondary) !important;
 }
 
-/* Price text */
-.price-text {
-  color: var(--accent);
-  font-weight: bold;
-  font-size: 1.2em;
+.text-muted {
+  color: var(--text-muted) !important;
 }
 
-/* Custom badge for handcrafted items */
-.badge-handcrafted {
-  background-color: var(--mahogany);
-  color: var(--sawdust);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--wood-dark);
+.text-accent {
+  color: var(--accent) !important;
 }
 
-/* Add custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
+/* Spacing and Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--wood-light);
+/* Custom Header Styling */
+header {
+  background: var(--gradient-primary) !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--wood-medium);
-  border-radius: 5px;
+/* Admin Panel Specific Fixes */
+.admin-container {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 2rem;
+  color: var(--text-primary);
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--wood-dark);
+.admin-form input, .admin-form textarea, .admin-form select {
+  background: var(--bg-input) !important;
+  color: var(--text-primary) !important;
+  border: 2px solid var(--border-light) !important;
+}
+
+/* Cart and Shop Improvements */
+.cart-item, .product-item {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+/* Success/Error Messages */
+.alert {
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #2d5a2d 0%, #4a7c4a 100%);
+  color: var(--text-primary);
+  border: 1px solid #5a8a5a;
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #5a2d2d 0%, #7c4a4a 100%);
+  color: var(--text-primary);
+  border: 1px solid #8a5a5a;
 }
