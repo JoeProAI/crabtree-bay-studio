@@ -41,7 +41,7 @@ export default function AdminPage() {
 
       if (response.ok) {
         setIsAuthenticated(true)
-        localStorage.setItem('admin_authenticated', 'true')
+        localStorage.setItem('admin-auth', 'true')
       } else {
         const data = await response.json()
         alert(data.error || 'Authentication failed')
@@ -121,6 +121,8 @@ export default function AdminPage() {
 
   const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault()
+    console.log('🛍️ Starting product creation...')
+    
     try {
       if (!newProduct.name || !newProduct.price) {
         alert('Name and price are required')
@@ -138,6 +140,8 @@ export default function AdminPage() {
         inventory_count: newProduct.inventory_count
       }
 
+      console.log('📝 Sending product data:', productData)
+
       const response = await fetch('/api/admin/products', {
         method: 'POST',
         headers: {
@@ -146,8 +150,11 @@ export default function AdminPage() {
         body: JSON.stringify(productData),
       })
 
+      console.log('📡 API Response status:', response.status)
+
       if (response.ok) {
         const newProductData = await response.json()
+        console.log('✅ Product created successfully:', newProductData)
         setProducts([newProductData, ...products])
         setNewProduct({
           name: '',
@@ -162,12 +169,20 @@ export default function AdminPage() {
         setShowAddForm(false)
         alert('Product added successfully!')
       } else {
-        const error = await response.json()
-        alert(`Failed to add product: ${error.error}`)
+        const errorText = await response.text()
+        let errorMsg = 'Unknown error'
+        try {
+          const errorJson = JSON.parse(errorText)
+          errorMsg = errorJson.error || errorText
+        } catch {
+          errorMsg = errorText
+        }
+        console.error('❌ Product creation failed:', response.status, errorMsg)
+        alert(`Failed to add product: ${errorMsg}`)
       }
     } catch (error) {
-      console.error('Error adding product:', error)
-      alert('Error adding product')
+      console.error('💥 Error adding product:', error)
+      alert(`Error adding product: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
   }
 
