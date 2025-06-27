@@ -91,19 +91,37 @@ export class ProductService {
 
   // Create a new product
   static async createProduct(productData: ProductInput): Promise<Product> {
+    console.log('🛍️ Creating new product with data:', JSON.stringify(productData, null, 2))
+    
     const supabaseAdmin = getSupabaseAdmin()
-    const { data, error } = await supabaseAdmin
-      .from('products')
-      .insert([productData])
-      .select()
-      .single()
+    
+    try {
+      // Add timestamp fields
+      const productWithTimestamp = {
+        ...productData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }
+      
+      console.log('📝 Inserting product into database...')
+      const { data, error } = await supabaseAdmin
+        .from('products')
+        .insert([productWithTimestamp])
+        .select()
+        .single()
 
-    if (error) {
-      console.error('Error creating product:', error)
-      throw new Error('Failed to create product')
+      if (error) {
+        console.error('❌ Database insert error:', error)
+        console.error('❌ Error details:', JSON.stringify(error, null, 2))
+        throw new Error(`Failed to create product: ${error.message}`)
+      }
+
+      console.log('✅ Product created successfully:', data)
+      return data
+    } catch (error) {
+      console.error('💥 Product creation failed:', error)
+      throw error
     }
-
-    return data
   }
 
   // Update a product
@@ -262,6 +280,8 @@ export class ProductService {
 
   // Upload product image to Supabase Storage
   static async uploadProductImage(file: File): Promise<string> {
+    console.log('🔄 Starting image upload for file:', file.name, 'Size:', file.size, 'Type:', file.type)
+    
     const supabaseAdmin = getSupabaseAdmin()
     
     // Generate a unique filename
@@ -269,26 +289,68 @@ export class ProductService {
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`
     const filePath = `product-images/${fileName}`
     
-    // Upload the file
-    const { error } = await supabaseAdmin
-      .storage
-      .from('products')
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: false
-      })
+    console.log('📁 Upload path:', filePath)
     
-    if (error) {
-      console.error('Error uploading image:', error)
-      throw new Error('Failed to upload product image')
+    try {
+      // First, check if the bucket exists by trying to list files
+      console.log('🔍 Checking if storage bucket "products" exists...')
+      const { data: bucketCheck, error: bucketError } = await supabaseAdmin
+        .storage
+        .from('products')
+        .list('', { limit: 1 })
+      
+      if (bucketError) {
+        console.error('❌ Storage bucket "products" error:', bucketError)
+        console.log('🔧 Attempting to create bucket...')
+        
+        // Try to create the bucket
+        const { error: createError } = await supabaseAdmin
+          .storage
+          .createBucket('products', {
+            public: true,
+            allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+            fileSizeLimit: 5242880 // 5MB
+          })
+        
+        if (createError) {
+          console.error('❌ Failed to create bucket:', createError)
+          throw new Error(`Storage bucket creation failed: ${createError.message}`)
+        }
+        
+        console.log('✅ Storage bucket "products" created successfully')
+      } else {
+        console.log('✅ Storage bucket "products" exists')
+      }
+      
+      // Upload the file
+      console.log('📤 Uploading file to storage...')
+      const { data: uploadData, error: uploadError } = await supabaseAdmin
+        .storage
+        .from('products')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        })
+      
+      if (uploadError) {
+        console.error('❌ Upload error:', uploadError)
+        throw new Error(`Upload failed: ${uploadError.message}`)
+      }
+      
+      console.log('✅ File uploaded successfully:', uploadData)
+      
+      // Get public URL
+      const { data: { publicUrl } } = supabaseAdmin
+        .storage
+        .from('products')
+        .getPublicUrl(filePath)
+      
+      console.log('🔗 Generated public URL:', publicUrl)
+      
+      return publicUrl
+    } catch (error) {
+      console.error('💥 Image upload failed with error:', error)
+      throw error
     }
-    
-    // Get public URL
-    const { data: { publicUrl } } = supabaseAdmin
-      .storage
-      .from('products')
-      .getPublicUrl(filePath)
-    
-    return publicUrl
   }
 }
