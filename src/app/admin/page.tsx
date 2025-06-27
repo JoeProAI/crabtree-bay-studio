@@ -270,9 +270,6 @@ export default function AdminPage() {
               Login
             </button>
           </form>
-          <div className="mt-4 text-center text-sm text-slate-500">
-            Demo password: crabtree2025
-          </div>
         </div>
       </div>
     )

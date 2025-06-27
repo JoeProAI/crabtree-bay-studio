@@ -8,10 +8,10 @@
   --accent-light: #DEB887;      /* Burlywood */
   
   /* Background Colors */
-  --bg-primary: #f8f6f2;        /* Light cream background */
-  --bg-secondary: #f0ebe4;      /* Slightly darker cream */
-  --bg-tertiary: #e8ddd1;       /* Medium cream */
-  --bg-card: #ffffff;           /* Pure white cards */
+  --bg-primary: #e8ddd1;        /* Warmer tan background */
+  --bg-secondary: #ddd1c4;      /* Medium tan */
+  --bg-tertiary: #d4c4b0;       /* Darker tan */
+  --bg-card: #f5f0e8;           /* Light warm white cards */
   --bg-input: #ffffff;          /* White input background */
   
   /* Text Colors - HIGH CONTRAST DARK */
