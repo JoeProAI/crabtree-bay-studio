@@ -294,7 +294,7 @@ export class ProductService {
     try {
       // First, check if the bucket exists by trying to list files
       console.log('🔍 Checking if storage bucket "products" exists...')
-      const { data: bucketCheck, error: bucketError } = await supabaseAdmin
+      const { error: bucketError } = await supabaseAdmin
         .storage
         .from('products')
         .list('', { limit: 1 })
