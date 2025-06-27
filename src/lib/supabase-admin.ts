@@ -10,12 +10,20 @@ function getSupabaseAdmin() {
   console.log('- URL exists:', !!supabaseUrl)
   console.log('- Service key exists:', !!supabaseServiceKey)
   console.log('- URL value:', supabaseUrl ? supabaseUrl.substring(0, 30) + '...' : 'undefined')
+  console.log('- All env vars:', Object.keys(process.env).filter(key => key.includes('SUPABASE')))
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    throw new Error(`Missing Supabase environment variables: URL=${!!supabaseUrl}, Key=${!!supabaseServiceKey}`)
+    const errorMsg = `Missing Supabase environment variables: URL=${!!supabaseUrl}, Key=${!!supabaseServiceKey}`
+    console.error('❌ SUPABASE ERROR:', errorMsg)
+    throw new Error(errorMsg)
   }
 
-  return createClient(supabaseUrl, supabaseServiceKey)
+  try {
+    return createClient(supabaseUrl, supabaseServiceKey)
+  } catch (error) {
+    console.error('❌ SUPABASE CLIENT ERROR:', error)
+    throw error
+  }
 }
 
 export interface ProductInput {
