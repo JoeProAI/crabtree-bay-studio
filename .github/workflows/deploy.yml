@@ -72,7 +72,7 @@ jobs:
           --set-env-vars NEXT_PUBLIC_SUPABASE_URL="${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" \
           --set-env-vars NEXT_PUBLIC_SUPABASE_ANON_KEY="${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
           --set-env-vars SUPABASE_URL="${{ secrets.SUPABASE_URL }}" \
-          --set-env-vars ADMIN_PASSWORD="${{ secrets.ADMIN_PASSWORD }}" \
+          --set-secrets ADMIN_PASSWORD=admin-password:latest \
           --set-secrets SUPABASE_SERVICE_ROLE_KEY=supabase-service-key:latest \
           --set-secrets STRIPE_SECRET_KEY=stripe-secret-key:latest \
           --set-secrets NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=stripe-publishable-key:latest
