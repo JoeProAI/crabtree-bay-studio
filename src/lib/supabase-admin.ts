@@ -304,7 +304,7 @@ export class ProductService {
         console.log('🔧 Attempting to create bucket...')
         
         // Try to create the bucket
-        const { error: createError } = await supabaseAdmin
+        const { data: bucketData, error: createError } = await supabaseAdmin
           .storage
           .createBucket('products', {
             public: true,
@@ -314,10 +314,15 @@ export class ProductService {
         
         if (createError) {
           console.error('❌ Failed to create bucket:', createError)
-          throw new Error(`Storage bucket creation failed: ${createError.message}`)
+          // If bucket already exists, that's actually OK
+          if (createError.message?.includes('already exists')) {
+            console.log('✅ Bucket already exists, continuing...')
+          } else {
+            throw new Error(`Storage bucket creation failed: ${createError.message}. Please create the 'products' bucket manually in your Supabase dashboard.`)
+          }
+        } else {
+          console.log('✅ Storage bucket "products" created successfully:', bucketData)
         }
-        
-        console.log('✅ Storage bucket "products" created successfully')
       } else {
         console.log('✅ Storage bucket "products" exists')
       }
