@@ -56,19 +56,35 @@ export class ProductService {
 
   // Get active products only
   static async getActiveProducts(): Promise<Product[]> {
-    const supabaseAdmin = getSupabaseAdmin()
-    const { data, error } = await supabaseAdmin
-      .from('products')
-      .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false })
+    try {
+      console.log('🔍 Fetching active products from Supabase...')
+      const supabaseAdmin = getSupabaseAdmin()
+      
+      console.log('🔗 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+      console.log('🔑 Service role key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+      
+      const { data, error } = await supabaseAdmin
+        .from('products')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at', { ascending: false })
 
-    if (error) {
-      console.error('Error fetching active products:', error)
-      throw new Error('Failed to fetch active products')
+      if (error) {
+        console.error('❌ Supabase query error details:')
+        console.error('  - Error code:', error.code)
+        console.error('  - Error message:', error.message)
+        console.error('  - Error details:', error.details)
+        console.error('  - Error hint:', error.hint)
+        console.error('  - Full error object:', JSON.stringify(error, null, 2))
+        throw new Error(`Supabase query failed: ${error.message} (Code: ${error.code})`)
+      }
+
+      console.log('✅ Successfully fetched products:', data?.length || 0)
+      return data || []
+    } catch (error) {
+      console.error('💥 getActiveProducts failed:', error)
+      throw error
     }
-
-    return data || []
   }
 
   // Get featured products
