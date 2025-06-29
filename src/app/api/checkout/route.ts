@@ -69,6 +69,12 @@ export async function POST(request: NextRequest) {
         allowed_countries: ['US'],
       },
       billing_address_collection: 'required',
+      automatic_tax: {
+        enabled: true,
+      },
+      tax_id_collection: {
+        enabled: true,
+      },
       metadata: {
         order_type: 'online',
         cartItems: JSON.stringify(cartItems.map(item => ({ id: item.product.id, quantity: item.quantity })))
