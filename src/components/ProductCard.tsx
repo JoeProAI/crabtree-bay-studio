@@ -41,11 +41,14 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="aspect-square relative overflow-hidden bg-slate-100" style={{ position: 'relative' }}>
         <Link href={`/products/${product.id}`}>
           <Image
-            src={product.image_url}
+            src={product.image_url || '/images/product-placeholder.jpg'}
             alt={product.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-200"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => {
+              console.log(`⚠️ Image load error for product: ${product.id} - ${product.name}`)
+            }}
           />
         </Link>
         {product.featured && (

@@ -5,21 +5,33 @@ import { ProductService } from '@/lib/supabase-admin'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🔄 Checkout API called')
+    
     // Initialize Stripe at runtime, not build time
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY
     if (!stripeSecretKey) {
-      console.error('STRIPE_SECRET_KEY not found')
+      console.error('❌ STRIPE_SECRET_KEY not found')
       return NextResponse.json({ error: 'Payment configuration error' }, { status: 500 })
     }
+    
+    console.log('✅ Stripe key loaded successfully')
 
     const stripe = new Stripe(stripeSecretKey, {
       apiVersion: '2025-05-28.basil',
     })
 
     const { cartItems, successUrl, cancelUrl }: { cartItems: CartItem[], successUrl?: string, cancelUrl?: string } = await request.json()
+    
+    console.log('📦 Cart items received:', JSON.stringify(cartItems))
 
     if (!cartItems || !Array.isArray(cartItems) || cartItems.length === 0) {
-      return NextResponse.json({ error: 'Invalid cart items' }, { status: 400 })
+      console.error('❌ Cart items validation failed:', { cartItems })
+      return NextResponse.json({ 
+        error: 'Invalid cart items', 
+        details: !cartItems ? 'cartItems is null/undefined' : 
+                !Array.isArray(cartItems) ? 'cartItems is not an array' : 
+                'cartItems array is empty'
+      }, { status: 400 })
     }
 
     // Check if all items are in stock

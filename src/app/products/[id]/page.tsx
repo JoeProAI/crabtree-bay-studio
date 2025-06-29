@@ -125,13 +125,15 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Image */}
           <div className="space-y-4">
-            <div className="relative aspect-square rounded-lg overflow-hidden bg-white">
-              <Image
-                src={product.image_url}
+            <div className="aspect-square relative">
+              <Image 
+                src={product.image_url || '/images/product-placeholder.jpg'} 
                 alt={product.name}
                 fill
-                className="object-cover"
-                priority
+                className="object-cover rounded-lg"
+                onError={() => {
+                  console.log(`⚠️ Detail page image load error for: ${product.id} - ${product.name}`)
+                }}
               />
             </div>
           </div>
