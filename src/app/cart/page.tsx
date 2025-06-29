@@ -46,9 +46,24 @@ export default function CartPage() {
       console.log('Checkout response status:', response.status)
       
       if (!response.ok) {
-        const errorText = await response.text()
-        console.error('Checkout API error:', errorText)
-        alert(`Checkout failed: ${response.status} ${response.statusText}`)
+        try {
+          const errorData = await response.json()
+          console.error('Checkout API error:', errorData)
+          
+          // Handle specific error types
+          if (errorData.error && errorData.error.includes('out of stock')) {
+            alert(`📦 Inventory Issue: ${errorData.error}\n\nPlease adjust your cart and try again.`)
+          } else if (errorData.error === 'Invalid cart items') {
+            alert('There was an issue with your cart. Please try refreshing the page.')
+          } else {
+            alert(`Checkout failed: ${errorData.error || response.statusText}`)
+          }
+        } catch (e) {
+          // If response is not JSON
+          const errorText = await response.text()
+          console.error('Checkout API parse error:', e, errorText)
+          alert(`Checkout failed: ${response.status} ${response.statusText}`)
+        }
         return
       }
 
