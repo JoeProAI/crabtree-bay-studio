@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
           description: item.product.description,
           images: [item.product.image_url],
         },
-        unit_amount: Math.round(item.product.price * 100), // Convert to cents
+        unit_amount: parseFloat((item.product.price * 100).toFixed(0)), // Convert to cents and ensure integer
       },
       quantity: item.quantity,
     }))
