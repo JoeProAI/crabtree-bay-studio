@@ -30,7 +30,7 @@ export default function ProductDetailPage() {
           // Handle both response formats - new API returns {success, count, products}
           const products = Array.isArray(data) ? data : (data.products || [])
           
-          const foundProduct = products.find(p => p.id === productId)
+          const foundProduct = products.find((p: Product) => p.id === productId)
           
           if (foundProduct) {
             console.log('✅ Found product:', foundProduct.name)

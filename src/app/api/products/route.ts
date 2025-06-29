@@ -39,12 +39,12 @@ export async function GET(request: NextRequest) {
       products: products
     })
     
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('❌ GET /api/products error:', error)
     
     // Detailed error response
-    const errorMessage = error?.message || 'Unknown error'
-    const errorDetails = error?.stack || ''
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+    const errorDetails = error instanceof Error ? error.stack || '' : ''
     
     return NextResponse.json(
       { 
