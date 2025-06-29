@@ -36,7 +36,11 @@ export default function CartPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items: cart.items }),
+        body: JSON.stringify({ 
+          cartItems: cart.items,
+          successUrl: window.location.origin + '/checkout/success',
+          cancelUrl: window.location.origin + '/cart'
+        }),
       })
 
       console.log('Checkout response status:', response.status)
