@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { Product } from '@/types'
 import { Search, Filter } from 'lucide-react'
-import Image from 'next/image'
+import ProductCard from '@/components/ProductCard'
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -17,23 +17,48 @@ export default function ShopPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        console.log('🔍 Fetching products for shop page...')
         const response = await fetch('/api/products')
-        if (response.ok) {
-          const data = await response.json()
-          setProducts(data)
-          
-          // Extract unique categories
-          const products = data as Product[]
-          const productCategories = products
-            .map(p => p.category)
-            .filter((category): category is string => typeof category === 'string' && category.length > 0)
-          const uniqueCategories: string[] = ['All', ...Array.from(new Set(productCategories))]
-          setCategories(uniqueCategories)
-        } else {
-          console.error('Failed to fetch products')
+        
+        if (!response.ok) {
+          console.error('❌ API response not OK:', response.status, response.statusText)
+          throw new Error(`API error: ${response.status} ${response.statusText}`)
         }
-      } catch (error) {
-        console.error('Error fetching products:', error)
+        
+        const responseData = await response.json()
+        console.log('🔄 API response format:', responseData)
+        
+        // Handle both old and new API response formats
+        let productData: Product[] = [];
+        
+        if (Array.isArray(responseData)) {
+          // Old format - direct array of products
+          productData = responseData;
+          console.log('📦 Using legacy API response format (direct array)')
+        } else if (responseData.products && Array.isArray(responseData.products)) {
+          // New format - {success, count, products}
+          productData = responseData.products;
+          console.log(`📦 Using new API response format (${responseData.count} products)`)
+        } else if (responseData.error) {
+          // Error response
+          console.error('❌ API returned error:', responseData.error)
+          throw new Error(`API error: ${responseData.error}`)
+        } else {
+          console.error('❓ Unknown API response format:', responseData)
+          throw new Error('Invalid API response format')
+        }
+        
+        console.log('✅ Products loaded successfully:', productData.length)
+        setProducts(productData)
+        
+        // Extract unique categories
+        const productCategories = productData
+          .map(p => p.category)
+          .filter((category): category is string => typeof category === 'string' && category.length > 0)
+        const uniqueCategories: string[] = ['All', ...Array.from(new Set(productCategories))]
+        setCategories(uniqueCategories)
+      } catch (e) {
+        console.error('Error fetching products:', e)
       } finally {
         setLoading(false)
       }
@@ -147,42 +172,10 @@ export default function ShopPage() {
                 Showing {filteredProducts.length} of {products.length} products
               </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
               {filteredProducts.map((product) => (
-                <div key={product.id} className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col border border-wood-light hover:border-wood-medium transition-colors">
-                  <div className="relative h-48 bg-workshop-concrete">
-                    {product.image_url ? (
-                      <Image
-                        src={product.image_url}
-                        alt={product.name}
-                        className="object-cover h-full w-full"
-                        width={300}
-                        height={200}
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-wood-light">
-                        <span className="text-wood-medium">No image</span>
-                      </div>
-                    )}
-                    {product.featured && (
-                      <span className="absolute top-2 right-2 bg-mahogany text-white text-xs px-2 py-1 rounded-md badge-handcrafted">
-                        Featured
-                      </span>
-                    )}
-                  </div>
-                  <div className="p-4 flex-grow">
-                    <h3 className="text-lg font-medium text-wood-dark font-heading">{product.name}</h3>
-                    <p className="mt-1 text-sm text-cedar line-clamp-2">{product.description}</p>
-                    <div className="mt-2 flex items-center justify-between">
-                      <span className="text-lg font-semibold text-wood-dark">${product.price.toFixed(2)}</span>
-                      <button
-                        onClick={() => console.log('Add to Cart')}
-                        className="bg-wood-dark text-white px-3 py-1 rounded-md text-sm hover:bg-walnut transition-colors"
-                      >
-                        Add to Cart
-                      </button>
-                    </div>
-                  </div>
+                <div key={product.id}>
+                  <ProductCard product={product} />
                 </div>
               ))}
             </div>

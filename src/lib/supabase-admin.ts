@@ -57,12 +57,9 @@ export class ProductService {
   // Get active products only
   static async getActiveProducts(): Promise<Product[]> {
     try {
-      console.log('🔍 Fetching active products from Supabase...')
+      console.log('🔍 Getting active products...')
+      
       const supabaseAdmin = getSupabaseAdmin()
-      
-      console.log('🔗 Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
-      console.log('🔑 Service role key exists:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
-      
       const { data, error } = await supabaseAdmin
         .from('products')
         .select('*')
@@ -79,8 +76,33 @@ export class ProductService {
         throw new Error(`Supabase query failed: ${error.message} (Code: ${error.code})`)
       }
 
-      console.log('✅ Successfully fetched products:', data?.length || 0)
-      return data || []
+      // Ensure image URLs are fully qualified and working
+      const products = data?.map(product => {
+        if (product.image_url) {
+          // Always ensure we have a fully qualified URL
+          if (!product.image_url.startsWith('http')) {
+            // Add Supabase URL prefix if missing
+            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+            if (product.image_url.includes('products/')) {
+              // If it's already a storage path, just add the base URL
+              product.image_url = `${supabaseUrl}/storage/v1/object/public/${product.image_url}`;
+            } else {
+              // Otherwise construct the full path
+              product.image_url = `${supabaseUrl}/storage/v1/object/public/products/${product.image_url}`;
+            }
+            console.log(`🔄 Fixed image URL: ${product.image_url}`);
+          }
+        } else {
+          // Set a default image if none exists
+          product.image_url = '/images/product-placeholder.jpg';
+          console.log('⚠️ Using placeholder image for product:', product.id);
+        }
+        return product;
+      }) || [];
+      
+      console.log('✅ Successfully fetched products:', products.length)
+      console.log('📸 First image URL sample:', products[0]?.image_url || 'No products')
+      return products
     } catch (error) {
       console.error('💥 getActiveProducts failed:', error)
       throw error

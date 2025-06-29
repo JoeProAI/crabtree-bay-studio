@@ -26,7 +26,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
               <div className="flex items-center justify-center h-20 w-20">
-                <Image src="/logo.png" alt="Crabtree Bay Studio" width={80} height={80} className="object-contain" />
+                <Image 
+                  src="/logo.png" 
+                  alt="Crabtree Bay Studio" 
+                  width={80} 
+                  height={80} 
+                  style={{ height: 'auto' }} 
+                  className="object-contain" 
+                />
               </div>
               <div className="text-2xl font-bold text-sawdust font-heading">
                 Crabtree Bay Studio

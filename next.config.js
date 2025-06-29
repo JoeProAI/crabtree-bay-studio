@@ -3,7 +3,8 @@ const nextConfig = {
   images: {
     domains: [
       'images.unsplash.com',
-      'pixiomedia.nyc3.digitaloceanspaces.com'
+      'pixiomedia.nyc3.digitaloceanspaces.com',
+      'yumlambiqahnkfqiqamu.supabase.co'
     ]
   }
 }

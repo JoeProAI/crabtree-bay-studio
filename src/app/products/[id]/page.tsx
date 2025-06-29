@@ -24,12 +24,19 @@ export default function ProductDetailPage() {
       try {
         const response = await fetch('/api/products')
         if (response.ok) {
-          const products: Product[] = await response.json()
+          const data = await response.json()
+          console.log('🔄 Product API response format:', data)
+          
+          // Handle both response formats - new API returns {success, count, products}
+          const products = Array.isArray(data) ? data : (data.products || [])
+          
           const foundProduct = products.find(p => p.id === productId)
           
           if (foundProduct) {
+            console.log('✅ Found product:', foundProduct.name)
             setProduct(foundProduct)
           } else {
+            console.log('⚠️ Product not found with ID:', productId)
             // Product not found, redirect to shop
             router.push('/shop')
           }
